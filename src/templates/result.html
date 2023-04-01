@@ -4,6 +4,7 @@ Prediction - Hand Sign Digit Recognition
 {% endblock %}
 
 {% block content %}
+
 <div class="container py-5">
 
     <div id="results">
@@ -13,6 +14,8 @@ Prediction - Hand Sign Digit Recognition
         </header>
 
         <header class="text-white text-center">
+            <div class="image-area mt-4"><img alt="" class="img-fluid rounded shadow-sm mx-auto d-block"
+                id="imageResult" name="imageResult" src=""></div>
             <h1 class="display-5">Prediction</h1>
             {% if predictions %}
             <h2 class="display-4 text-dark font-weight-bold">{{predictions}}</h2>
