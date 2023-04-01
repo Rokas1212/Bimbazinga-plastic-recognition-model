@@ -6,7 +6,7 @@ from fastai.vision.all import *
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-model = torch.load("C:\\Users\\matas\\OneDrive\\Stalinis kompiuteris\\modelGUI\\Bimbazinga-plastic-recognition-model\\src\\model.pkl",
+model = torch.load("src\model.pkl",
                    map_location=torch.device('cpu'))
 
 
