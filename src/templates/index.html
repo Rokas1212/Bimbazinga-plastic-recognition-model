@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Home page</title>
+</head>
+
+<body>
+ <div class="drag-area">
+    <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+    <header>Drag & Drop to upload an image</header>
+    <span>OR</span>
+    <button>Browse Images</button>
+    <input type="file" hidden>
+  </div>
+
+<script>
+    const dropArea = document.querySelector(".drag-area"),
+    dragText = dropArea.querySelector("header"),
+    button = dropArea.querySelector("button"),
+    input = dropArea.querySelector("input");
+    let file; //this is a global variable and we'll use it inside multiple functions
+
+    button.onclick = () => {
+        input.click(); //if user click on the button then the input also clicked
+    }
+
+    input.addEventListener("change", function() {
+        //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+        file = this.files[0];
+        dropArea.classList.add("active");
+        showFile(); //calling function
+    });
+    //If user Drag File Over DropArea
+    dropArea.addEventListener("dragover", (event) => {
+        event.preventDefault(); //preventing from default behaviour
+        dropArea.classList.add("active");
+        dragText.textContent = "Release to Upload image";
+    });
+
+    //If user leave dragged File from DropArea
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("active");
+        dragText.textContent = "Drag & Drop to upload an image";
+    });
+
+    //If user drop File on DropArea
+    dropArea.addEventListener("drop", (event) => {
+        event.preventDefault(); //preventing from default behaviour
+        //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+        file = event.dataTransfer.files[0];
+        showFile(); //calling function
+    });
+
+    function showFile() {
+        let fileType = file.type; //getting selected file type
+        let validExtensions = ["image/jpeg", "image/jpg"]; //adding some valid image extensions in array
+        if (validExtensions.includes(fileType)) { //if user selected file is an image file
+            let fileReader = new FileReader(); //creating new FileReader object
+            fileReader.onload = () => {
+                let fileURL = fileReader.result; //passing user file source in fileURL variable
+                let imgTag = `<img src="${fileURL}" alt="image">`; //   ng an img tag and passing user selected file source inside src
+                dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
+            }
+            fileReader.readAsDataURL(file);
+        }
+        else if(fileType == "image/png"){
+            fileType.replace("png", "jpg");
+            let fileReader = new FileReader(); //creating new FileReader object
+            fileReader.onload = () => {
+                let fileURL = fileReader.result.replace("png", "jpg"); //passing user file source in fileURL variable
+
+                let imgTag = `<img src="${fileURL}" alt="image">`; //   ng an img tag and passing user selected file source inside src
+                dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
+            }
+            fileReader.readAsDataURL(file);
+        } 
+        else {
+            alert("This is not an Image File!");
+            dropArea.classList.remove("active");
+            dragText.textContent = "Drag & Drop to Upload File";
+        }
+    }
+</script>
+</body>
+</html>
