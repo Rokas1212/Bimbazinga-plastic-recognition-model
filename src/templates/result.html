@@ -6,18 +6,21 @@ Prediction - Hand Sign Digit Recognition
 {% block content %}
 <div class="container py-5">
 
-    <header class="text-white text-center">
-        <h1 class="display-4">Plastic Recognition</h1>
-        <p class="lead mb-5">You will see the prediction of the input image.</p>
-    </header>
+    <div id="results">
+        <header class="text-white text-center">
+            <h1 class="display-4">Plastic Recognition</h1>
+            <p class="lead mb-5">You will see the prediction of the input image.</p>
+        </header>
 
-    <header class="text-white text-center">
-        <h1 class="display-5">Prediction</h1>
-        {% if predictions %}
-        <h2 class="display-4 text-dark font-weight-bold">{{predictions}}</h2>
-        {% else %}
-        <h2 class="display-4 text-dark font-weight-bold">{{err}}</h2>
-        {% endif %}
-    </header>
+        <header class="text-white text-center">
+            <h1 class="display-5">Prediction</h1>
+            {% if predictions %}
+            <h2 class="display-4 text-dark font-weight-bold">{{predictions}}</h2>
+            {% else %}
+            <h2 class="display-4 text-dark font-weight-bold">{{err}}</h2>
+            {% endif %}
+        </header>
+        <a href="{{ url_for('main') }}" id="return">Go back</a>
+    </div>
 </div>
 {% endblock %}

@@ -14,9 +14,8 @@ def main():
 
 
 # Prediction route
-@app.route('/prediction', methods=['POST'])
+@app.route('/', methods=['POST'])
 def predict_image_file():
-
     if request.method == 'POST':
         file = request.files['file']
 
