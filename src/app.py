@@ -1,30 +1,33 @@
+# Importing required libs
 from flask import Flask, render_template, request
-from views import views 
-import pickle
+from model import  predict_result
+import os
+# Instantiating flask app
+app = Flask(__name__)
 
-# with open(f'model/.pkl', 'rb') as f:
-#     model = pickle.load(f)
 
-app = Flask(__name__, template_folder='templates')
-
-@app.route('/')
+# Home route
+@app.route("/")
 def main():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/prediction', methods = ['POST'])
-def predict_plastic():
-    if 'image' not in request.files:
-        return 'No image found', 400
-    file = request.files['image']
 
-    if file.filename == '':
-        return 'No iamge found', 400
-    
-    if request.method == 'POST':
-        file = request.files['image']
-    file.save('/path/to/save/image')
-    return 'File uploaded successfully', 200
+# Prediction route
+@app.route('/prediction', methods=['POST'])
+def predict_image_file():
+    try:
+        if request.method == 'POST':
+            img = request.files['file']
+            predicted_label,_,predicted_prob = predict_result('C:\\Users\\matas\\OneDrive\\Stalinis kompiuteris\\4(LDPE)\\ERMA5291.jpg')
+            # pred = predict_result(img)
+            
+            return render_template("result.html", predictions=str(predicted_label + predicted_prob))
 
-if __name__ == '__main__':
-    app.run(debug = True, port=8000)
+    except:
+        error = "File cannot be processed."
+        return render_template("result.html", err=str(img))
 
+
+# Driver code
+if __name__ == "__main__":
+    app.run(port=9000, debug=True)

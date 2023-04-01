@@ -1,130 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html"%}
+{% block title %}
+Hand Sign Digit Recognition
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Home page</title>
-</head>
+{% block content %}
+<div class="container py-5">
 
-<body>
-    <div class="drag-area">
-        <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-        <header>Drag & Drop to upload an image</header>
-        <span>OR</span>
-        <button>Browse Images</button>
-        <input type="file" hidden>
+    <header class="text-white text-center">
+        <h1 class="display-4">Hand Sign Digit Language Detection</h1>
+        <p class="lead mb-5">A webapp to detect a digit using hand sign language. Just drop an image of Hand Digit Sign
+            and see the magic.</p>
+    </header>
+
+
+    <div class="row py-4">
+        <div class="col-lg-6 mx-auto">
+
+            <!-- Upload image input-->
+            <form action="{{ url_for('predict_image_file') }}" enctype="multipart/form-data" method="POST">
+                <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                    <input class="form-control border-0" id="upload" name="file" type="file">
+                    <label class="font-weight-light text-muted" for="upload" id="upload-label">Choose file</label>
+                    <div class="input-group-append">
+                        <label class="btn btn-light m-0 rounded-pill px-4" for="upload"> <i
+                                class="fa fa-cloud-upload mr-2 text-muted"></i><small
+                                class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+                    </div>
+                </div>
+
+
+                <!-- Uploaded image area-->
+                <p class="font-italic text-white text-center">The image uploaded will be rendered inside the box
+                    below.</p>
+                <div class="image-area mt-4"><img alt="" class="img-fluid rounded shadow-sm mx-auto d-block"
+                                                  id="imageResult" name="imageResult"
+                                                  src="#"></div>
+
+                <!-- Submit button-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col text-center">
+                            <input class="btn btn-primary my-3" type="submit"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
     </div>
-    <div><button id="predict-button" disabled>Predict</button></div>
-    <script>
-        const dropArea = document.querySelector(".drag-area"),
-            dragText = dropArea.querySelector("header"),
-            button = dropArea.querySelector("button"),
-            input = dropArea.querySelector("input");
-        const predictButton = document.querySelector("#predict-button")
-        let file; //this is a global variable and we'll use it inside multiple functions
+</div>
 
-        button.onclick = () => {
-            input.click(); //if user click on the button then the input also clicked
-        }
-
-        input.addEventListener("change", function () {
-            //getting user select file and [0] this means if user select multiple files then we'll select only the first one
-            file = this.files[0];
-            dropArea.classList.add("active");
-            showFile(); //calling function
-        });
-        //If user Drag File Over DropArea
-        dropArea.addEventListener("dragover", (event) => {
-            event.preventDefault(); //preventing from default behaviour
-            dropArea.classList.add("active");
-            dragText.textContent = "Release to Upload image";
-        });
-
-        //If user leave dragged File from DropArea
-        dropArea.addEventListener("dragleave", () => {
-            dropArea.classList.remove("active");
-            dragText.textContent = "Drag & Drop to upload an image";
-        });
-
-        //If user drop File on DropArea
-        dropArea.addEventListener("drop", (event) => {
-            event.preventDefault(); //preventing from default behaviour
-            //getting user select file and [0] this means if user select multiple files then we'll select only the first one
-            file = event.dataTransfer.files[0];
-            showFile(); //calling function
-        });
-
-        function showFile() {
-            if (!file) {
-                // reset the drop area to its initial state
-                dropArea.classList.remove("active");
-                dragText.textContent = "Drag & Drop to upload an image";
-                console.log("Drag & Drop to upload an image");
-                button.style.display = "block";
-                dropArea.innerHTML = '<div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>';
-                return;
-            }
-
-            // show the uploaded image
-            let fileType = file.type; //getting selected file type
-            let validExtensions = ["image/jpeg", "image/jpg"]; //adding some valid image extensions in array
-            if (validExtensions.includes(fileType)) { //if user selected file is an image file
-                let fileReader = new FileReader(); //creating new FileReader object
-                fileReader.onload = () => {
-                    let fileURL = fileReader.result; //passing user file source in fileURL variable
-                    let imgTag = `<img src="${fileURL}" alt="image">`; //   ng an img tag and passing user selected file source inside src
-                    dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
-
-                    // show the remove button
-                    let removeButton = document.createElement("button");
-                    removeButton.innerHTML = '<i class="fas fa-times"></i>';
-                    removeButton.classList.add("remove-button");
-                    dropArea.appendChild(removeButton);
-
-                    // add a click event listener to the remove button
-                    removeButton.addEventListener("click", () => {
-                        file = null;
-                        showFile();
-                    });
-                }
-                fileReader.readAsDataURL(file);
-            }
-            else if (fileType == "image/png") {
-                fileType.replace("png", "jpg");
-                let fileReader = new FileReader(); //creating new FileReader object
-                fileReader.onload = () => {
-                    let fileURL = fileReader.result.replace("png", "jpg"); //passing user file source in fileURL variable
-
-                    let imgTag = `<img src="${fileURL}" alt="image">`; //   ng an img tag and passing user selected file source inside src
-                    dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
-
-                    // show the remove button
-                    let removeButton = document.createElement("button");
-                    removeButton.innerHTML = '<i class="fas fa-times"></i>';
-                    removeButton.classList.add("remove-button");
-                    dropArea.appendChild(removeButton);
-
-                    // add a click event listener to the remove button
-                    removeButton.addEventListener("click", () => {
-                        file = null;
-                        showFile();
-                    });
-                }
-                fileReader.readAsDataURL(file);
-            }
-            else {
-                alert("This is not an Image File!");
-                dropArea.classList.remove("active");
-                dragText.textContent = "Drag & Drop to Upload File";
-            }
-        }
-    </script>
-</body>
-
-</html>
+{% endblock %}
