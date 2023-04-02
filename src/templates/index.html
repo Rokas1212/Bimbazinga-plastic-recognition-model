@@ -43,8 +43,14 @@ Hand Sign Digit Recognition
                         </div>
                     </div>
                 </div>
-            </form>
 
+            </form>
+            <div class="camera-area">
+                <button id="startCameraBtn">Start Camera</button>
+                <button onclick="takeSnapshot()">Take Photo</button>
+                <video id="videoFeed" autoplay></video>
+                <canvas id="canvas"></canvas>
+            </div>
         </div>
     </div>
 </div>

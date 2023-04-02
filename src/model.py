@@ -10,7 +10,8 @@ model = torch.load("src\model.pkl",
                    map_location=torch.device('cpu'))
 
 
-def predict_result(image_path):
-    img = mpimg.imread(image_path)
+def predict_result(file):
+    img = mpimg.imread(file)
     label, _, probs = model.predict(img)
     return label
+

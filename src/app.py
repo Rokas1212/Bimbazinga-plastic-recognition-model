@@ -2,6 +2,9 @@
 from flask import Flask, render_template, request, url_for
 from model import predict_result
 from werkzeug.utils import secure_filename
+import io
+from PIL import Image
+import base64
 import os
 # Instantiating flask app
 app = Flask(__name__)
@@ -16,15 +19,15 @@ def main():
 # Prediction route
 @app.route('/', methods=['POST'])
 def predict_image_file():
-    if request.method == 'POST':
-        file = request.files['file']
+    try:
+        if request.method == 'POST':
+            file = request.files['file']
 
-        pred = predict_result(file)
-        return render_template("result.html", predictions=str(pred))
-
-    error = "File cannot be processed."
-    return render_template("result.html", err=error)
-
+            pred = predict_result(file)
+            return render_template("result.html", predictions=str(pred))
+    except:
+        error = "File cannot be processed."
+        return render_template("result.html", err=error)
 
 # Driver code
 if __name__ == "__main__":
