@@ -6,7 +6,7 @@ from fastai.vision.all import *
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-model = torch.load("model.pkl",
+model = torch.load("./model.pkl",
                    map_location=torch.device('cpu'))
 
 
