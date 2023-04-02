@@ -17,10 +17,10 @@ Prediction - Hand Sign Digit Recognition
             <div class="image-area mt-4"><img alt="" class="img-fluid rounded shadow-sm mx-auto d-block"
                 id="imageResult" name="imageResult" src=""></div>
             <h1 class="display-5">Prediction</h1>
-            {% if predictions %}
-            <h2 class="display-4 text-dark font-weight-bold">{{predictions}}</h2>
+            {% if predictions and probs!="" %}
+            <h3 class="display-4 text-dark font-weight-bold">{{predictions}}, the model is {{probs}}% sure</h2>
             {% else %}
-            <h2 class="display-4 text-dark font-weight-bold">{{err}}</h2>
+            <h3 class="display-4 text-dark font-weight-bold">{{err}}</h2>
             {% endif %}
         </header>
         <a href="{{ url_for('main') }}" id="return">Go back</a>

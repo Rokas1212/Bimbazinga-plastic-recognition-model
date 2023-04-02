@@ -6,11 +6,11 @@ from fastai.vision.all import *
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-model = torch.load("./model.pkl",
+model = torch.load("Bimbazinga-plastic-recognition-model\model.pkl",
                    map_location=torch.device('cpu'))
 
 
 def predict_result(image_path):
     img = mpimg.imread(image_path)
     label, _, probs = model.predict(img)
-    return label
+    return label, _, probs

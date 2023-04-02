@@ -16,14 +16,15 @@ def main():
 # Prediction route
 @app.route('/', methods=['POST'])
 def predict_image_file():
-    if request.method == 'POST':
-        file = request.files['file']
+    try:
+        if request.method == 'POST':
+            file = request.files['file']
 
-        pred = predict_result(file)
-        return render_template("result.html", predictions=str(pred))
-
-    error = "File cannot be processed."
-    return render_template("result.html", err=error)
+            pred, index, probs = predict_result(file)
+            return render_template("result.html", predictions=str(pred), probs=int(probs[index]*100))
+    except:
+        error = "File cannot be processed."
+        return render_template("result.html", err=error)
 
 
 # Driver code
