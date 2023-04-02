@@ -1,6 +1,6 @@
 flask==2.0.2
 fastai==2.7.12
 Pillow==9.5.0
-torch==2.0.0
+torch<=2.0.0
 torchvision
 gunicorn
